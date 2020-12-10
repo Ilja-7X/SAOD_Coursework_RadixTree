@@ -7,11 +7,12 @@
 struct RadixTree
 {
     char *value;
-    char *key;
-    struct trie *sibling;
-    struct trie *child;
+    char *string;
+    struct RadixTree *sibling;
+    struct RadixTree *child;
 };
 
 struct RadixTree *radixTreeCreate(int size);
+struct RadixTree *radixTreeInsert(struct RadixTree *root, char *key, char *value);
 
 #endif
