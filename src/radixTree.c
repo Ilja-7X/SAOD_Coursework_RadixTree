@@ -45,13 +45,19 @@ struct RadixTree *radixTreeInsert(struct RadixTree *root, char *key, char *value
             {
                 break;
             }
+            else if ((*prefix != '\0') && (*string == '\0'))
+            {
+                split(node, prefix);
+                flag = 0;
+                break;
+            }
 
-            /*if ((*prefix == '\0') && (*string != '\0'))
+            else if (*prefix != *string)
+            {
+                if (prefix != node->string)
                 {
-                    flag = 0;
-                    break;
-                }*/
-            //if ((*prefix != '\0') && (*string == '\0'))
+                }
+            }
         }
 
         if (node == NULL)
@@ -79,26 +85,20 @@ struct RadixTree *radixTreeInsert(struct RadixTree *root, char *key, char *value
     return root;
 }
 
-/*struct RadixTree *radixTreeInsert(struct RadixTree *root, char *key, char *value)
+struct RadixTree *split(struct RadixTree *node, char *prefix)
 {
-    struct RadixTree *node, *parent, *list;
-    int *count;
+    struct RadixTree *newNode = radixTreeCreate(strlen(prefix) + 1);
+    strcpy(newNode->string, prefix);
 
-    parent = NULL;
-    list = root;
+    *prefix = '\0';
 
-    *count = 0;
-
-    return radixTreeInsertRecurs(root, parent, key, count, value);
-}
-
-struct RadixTree *radixRreeInsertRecurs(struct RadixTree *currentNode, struct RadixTree *parent, char *key, int *count, char *value)
-{
-
-    struct RadixTree *node, *list;
-    list = currentNode;
-
-    for (node = list; node != NULL; node = node->sibling)
+    node->string = realloc(node->string, prefix - node->string + 1);
+    if (node->value != NULL)
     {
+        newNode->value = node->value;
+        node->value = NULL;
     }
-}*/
+    newNode->child = node->child;
+    node->child = newNode;
+    return newNode;
+}

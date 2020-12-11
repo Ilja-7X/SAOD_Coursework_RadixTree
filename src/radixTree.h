@@ -14,5 +14,6 @@ struct RadixTree
 
 struct RadixTree *radixTreeCreate(int size);
 struct RadixTree *radixTreeInsert(struct RadixTree *root, char *key, char *value);
+struct RadixTree *split(struct RadixTree *node, char *prefix);
 
 #endif
