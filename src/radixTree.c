@@ -106,3 +106,35 @@ struct RadixTree *split(struct RadixTree *node, char *prefix)
     node->child = newNode;
     return newNode;
 }
+
+void trie_print(struct RadixTree *root, int level, int check)
+{
+    struct RadixTree *node;
+    int i;
+
+    for (node = root; node != NULL; node = node->sibling)
+    {
+        if (check == 1)
+        {
+            for (i = 0; i < level; i++)
+            {
+                printf(" ");
+            }
+            check = 0;
+        }
+        if (node->value != NULL)
+        {
+            printf("%s - %s\n", node->string, node->value);
+            check = 1;
+        }
+        else
+        {
+            printf("%s", node->string);
+        }
+        if (node->child != NULL)
+        {
+            trie_print(node->child, level + 1, check);
+        }
+        check = 1;
+    }
+}
