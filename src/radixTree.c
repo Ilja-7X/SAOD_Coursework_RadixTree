@@ -138,3 +138,45 @@ void radixTreePrint(struct RadixTree *root, int level, int check)
         check = 1;
     }
 }
+
+char *radixTreeLookup(struct RadixTree *root, char *key)
+{
+    struct RadixTree *node, *list;
+    char *string, *prefix;
+
+    list = root;
+    string = key;
+
+    int flag = 1;
+
+    while (flag == 1)
+    {
+        for (node = list; node != NULL; node = node->sibling)
+        {
+            prefix = node->string;
+            for (; (*prefix != '\0') || (*string != '\0'); prefix++, string++)
+            {
+                if (*prefix != *string)
+                    break;
+            }
+
+            if ((*prefix == '\0') && (*string == '\0'))
+            {
+                flag = 0;
+                break;
+            }
+            if ((*prefix == '\0') && (*string != '\0'))
+            {
+                break;
+            }
+        }
+        if ((node != NULL) && (flag != 0))
+        {
+            list = node->child;
+        }
+        else if (flag != 0)
+            return NULL;
+    }
+
+    return node->value;
+}
