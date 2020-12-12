@@ -107,7 +107,7 @@ struct RadixTree *split(struct RadixTree *node, char *prefix)
     return newNode;
 }
 
-void trie_print(struct RadixTree *root, int level, int check)
+void radixTreePrint(struct RadixTree *root, int level, int check)
 {
     struct RadixTree *node;
     int i;
@@ -133,7 +133,7 @@ void trie_print(struct RadixTree *root, int level, int check)
         }
         if (node->child != NULL)
         {
-            trie_print(node->child, level + 1, check);
+            radixTreePrint(node->child, level + 1, check);
         }
         check = 1;
     }
