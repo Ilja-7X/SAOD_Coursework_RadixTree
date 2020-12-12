@@ -56,7 +56,11 @@ struct RadixTree *radixTreeInsert(struct RadixTree *root, char *key, char *value
             {
                 if (prefix != node->string)
                 {
+                    parent = node;
+                    node = split(node, prefix);
+                    list = node;
                 }
+                list = node;
             }
         }
 
