@@ -133,7 +133,7 @@ void radixTreePrint(struct RadixTree *root, int level, int check)
         }
         if (node->child != NULL)
         {
-            radixTreePrint(node->child, level + 1, check);
+            radixTreePrint(node->child, level + strlen(node->string), check);
         }
         check = 1;
     }
