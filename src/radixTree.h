@@ -19,5 +19,7 @@ void radixTreePrint(struct RadixTree *root, int level, int check);
 char *radixTreeLookup(struct RadixTree *root, char *key);
 struct RadixTree *radixTreeDelete(struct RadixTree *root, char *key);
 struct RadixTree *radixTreeDeleteDfs(struct RadixTree *root, struct RadixTree *parent, char *key);
+void nodesMerge(struct RadixTree *node);
+void func(struct RadixTree *node);
 
 #endif

@@ -60,7 +60,7 @@ struct RadixTree *radixTreeInsert(struct RadixTree *root, char *key, char *value
                     node = split(node, prefix);
                     list = node;
                 }
-                list = node;
+                //list = node;
             }
         }
 
@@ -188,7 +188,7 @@ struct RadixTree *radixTreeDelete(struct RadixTree *root, char *key)
 
 struct RadixTree *radixTreeDeleteDfs(struct RadixTree *root, struct RadixTree *parent, char *key)
 {
-    struct RadixTree *node;
+    struct RadixTree *node, *prev = NULL;
     char *prefix;
     //\*found = (*key == '\0' && root == NULL) ? 1 : 0;
     //if (root == NULL || *key == '\0')
@@ -201,9 +201,76 @@ struct RadixTree *radixTreeDeleteDfs(struct RadixTree *root, struct RadixTree *p
             if (*prefix != *key)
                 break;
         }
+
         if ((*prefix == '\0') && (*key == '\0'))
         {
             printf("found:%p\n", node);
+            if (node->value != NULL)
+            {
+                if (node->child != NULL)
+                {
+                    struct RadixTree *childNote = node->child;
+                    if (childNote->sibling != NULL)
+                    {
+                        free(node->value);
+                        node->value = NULL;
+                        return root;
+                    }
+                    else
+                    {
+                        /*node->string = realloc(node->string, strlen(node->string) + strlen(childNote->string) + 1);
+                        node->string = strcat(node->string, childNote->string);
+                        free(node->value);
+                        node->value = childNote->value;
+                        node->child = childNote->child;
+                        free(childNote->string);
+                        free(childNote);*/
+                        nodesMerge(node);
+                        return root;
+                    }
+                }
+                else
+                {
+                    if (prev != NULL)
+                    {
+                        printf("prev->sibling:%s\n", prev->string);
+                        prev->sibling = node->sibling;
+                    }
+                    else
+                        parent->child = node->sibling;
+                    free(node->string);
+                    free(node->value);
+                    free(node);
+
+                    if (parent->value != NULL)
+                        return root;
+                    else
+                    {
+                        node = parent->child;
+                        if (node->sibling == NULL)
+                        {
+                            /*node->string = realloc(node->string, strlen(node->string) + strlen(childNote->string) + 1);
+                            node->string = strcat(node->string, childNote->string);
+                            free(node->value);
+                            node->value = childNote->value;
+                            node->child = childNote->child;
+                            free(childNote->string);
+                            free(childNote);*/
+                            printf("---------------\n");
+                            printf("parent:\n");
+                            func(parent);
+                            printf("node:\n");
+                            printf("\n");
+                            func(node);
+                            printf("\n");
+
+                            nodesMerge(parent);
+                        }
+                        return root;
+                    }
+                }
+            }
+
             return root;
         }
 
@@ -217,6 +284,7 @@ struct RadixTree *radixTreeDeleteDfs(struct RadixTree *root, struct RadixTree *p
         {
             break;
         }
+        prev = node;
     }
     if (node == NULL)
         return root;
@@ -224,4 +292,26 @@ struct RadixTree *radixTreeDeleteDfs(struct RadixTree *root, struct RadixTree *p
     radixTreeDeleteDfs(node->child, node, key);
 
     return root;
+}
+
+void nodesMerge(struct RadixTree *node)
+{
+    struct RadixTree *childNode = node->child;
+    node->string = realloc(node->string, strlen(node->string) + strlen(childNode->string) + 1);
+    node->string = strcat(node->string, childNode->string);
+    if (node->value != NULL)
+        free(node->value);
+    node->value = childNode->value;
+    node->child = childNode->child;
+    free(childNode->string);
+    free(childNode);
+}
+
+void func(struct RadixTree *node)
+{
+    printf("%p\n", node);
+    printf("node->string:%s\n", node->string);
+    printf("node->value:%s\n", node->value);
+    printf("node->sibling:%p\n", node->sibling);
+    printf("node->child:%p\n\n", node->child);
 }
