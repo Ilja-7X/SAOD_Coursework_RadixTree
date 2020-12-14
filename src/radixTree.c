@@ -180,3 +180,48 @@ char *radixTreeLookup(struct RadixTree *root, char *key)
 
     return node->value;
 }
+
+struct RadixTree *radixTreeDelete(struct RadixTree *root, char *key)
+{
+    return radixTreeDeleteDfs(root, NULL, key);
+}
+
+struct RadixTree *radixTreeDeleteDfs(struct RadixTree *root, struct RadixTree *parent, char *key)
+{
+    struct RadixTree *node;
+    char *prefix;
+    //\*found = (*key == '\0' && root == NULL) ? 1 : 0;
+    //if (root == NULL || *key == '\0')
+    //    return root;
+    for (node = root; node != NULL; node = node->sibling)
+    {
+        prefix = node->string;
+        for (; (*prefix != '\0') || (*key != '\0'); prefix++, key++)
+        {
+            if (*prefix != *key)
+                break;
+        }
+        if ((*prefix == '\0') && (*key == '\0'))
+        {
+            printf("found:%p\n", node);
+            return root;
+        }
+
+        if ((*prefix != '\0') && (*key == '\0'))
+        {
+            printf("not found:%p\n", node);
+            return root;
+        }
+
+        if ((*prefix == '\0') && (*key != '\0'))
+        {
+            break;
+        }
+    }
+    if (node == NULL)
+        return root;
+
+    radixTreeDeleteDfs(node->child, node, key);
+
+    return root;
+}
