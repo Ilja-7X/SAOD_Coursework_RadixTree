@@ -30,7 +30,7 @@ struct RadixTree *radixTreeInsert(struct RadixTree *root, char *key, char *value
         for (node = list; node != NULL; node = node->sibling)
         {
             prefix = node->string;
-            for (; (*prefix != '\0') || (*string != '\0'); prefix++, string++) // проходит все одинаковые символы в обеих строках
+            for (; (*prefix != '\0') || (*string != '\0'); prefix++, string++)
             {
                 if (*prefix != *string)
                     break;
@@ -182,10 +182,10 @@ char *radixTreeLookup(struct RadixTree *root, char *key)
 
 struct RadixTree *radixTreeDelete(struct RadixTree *root, char *key)
 {
-    return radixTreeDeleteDfs(root, NULL, key);
+    return radixTreeDeleteRecur(root, NULL, key);
 }
 
-struct RadixTree *radixTreeDeleteDfs(struct RadixTree *root, struct RadixTree *parent, char *key)
+struct RadixTree *radixTreeDeleteRecur(struct RadixTree *root, struct RadixTree *parent, char *key)
 {
     struct RadixTree *node, *prev = NULL;
     char *prefix;
@@ -268,7 +268,7 @@ struct RadixTree *radixTreeDeleteDfs(struct RadixTree *root, struct RadixTree *p
     if (node == NULL)
         return root;
 
-    radixTreeDeleteDfs(node->child, node, key);
+    radixTreeDeleteRecur(node->child, node, key);
 
     return root;
 }
